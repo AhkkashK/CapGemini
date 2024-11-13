@@ -12,6 +12,18 @@ app.get('/', (req, res) => {
   res.send('Hello, world! Welcome to your Express API!');
 });
 
+/*READ*/
+
+
+/*CREATE*/
+
+
+/*UPDATE*/
+
+
+/*DELETE*/
+
+
 app.listen(PORT, () => {
   console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
 });
