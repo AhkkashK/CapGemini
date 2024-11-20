@@ -58,13 +58,103 @@ app.get('/etablissements/:siret', async (req, res) => {
 
 
 /* CREATE */
-app.post('etablissements/', async (req, res) => {
-  const { siret, nom } = req.body;
+app.post('/etablissements', async (req, res) => {
+  const siret = req.body.siret;
+
   try {
-    await pool.query('INSERT INTO votre_table (siret, nom) VALUES ($1, $2)', [siret, nom]);
-    res.status(201).send('Enregistrement ajouté');
+    // Vérifier si le numéro de SIRET existe déjà dans la base de données
+    const existingEntry = await pool.query('SELECT * FROM etablissements WHERE siret = $1', [siret]);
+
+    if (existingEntry.rows.length > 0) {
+      // Si le SIRET existe déjà, renvoyer un message d'erreur
+      return res.status(400).send('Le numéro de SIRET existe déjà dans la base de données.');
+    }
+
+    const values = [
+      req.body.siren,
+      req.body.nic,
+      req.body.siret,
+      req.body.statut_diffusion_etablissement,
+      req.body.date_creation_etablissement,
+      req.body.tranche_effectifs_etablissement,
+      req.body.annee_effectifs_etablissement,
+      req.body.activite_principale_registre_metiers_etablissement,
+      req.body.date_dernier_traitement_etablissement,
+      req.body.etablissement_siege,
+      req.body.nombre_periodes_etablissement,
+      req.body.complement_adresse_etablissement,
+      req.body.numero_voie_etablissement,
+      req.body.indice_repetition_etablissement,
+      req.body.type_voie_etablissement,
+      req.body.libelle_voie_etablissement,
+      req.body.code_postal_etablissement,
+      req.body.libelle_commune_etablissement,
+      req.body.libelle_commune_etranger_etablissement,
+      req.body.distribution_speciale_etablissement,
+      req.body.code_commune_etablissement,
+      req.body.code_cedex_etablissement,
+      req.body.libelle_cedex_etablissement,
+      req.body.code_pays_etranger_etablissement,
+      req.body.libelle_pays_etranger_etablissement,
+      req.body.complement_adresse2_etablissement,
+      req.body.numero_voie2_etablissement,
+      req.body.indice_repetition2_etablissement,
+      req.body.type_voie2_etablissement,
+      req.body.libelle_voie2_etablissement,
+      req.body.code_postal2_etablissement,
+      req.body.libelle_commune2_etablissement,
+      req.body.libelle_commune_etranger2_etablissement,
+      req.body.distribution_speciale2_etablissement,
+      req.body.code_commune2_etablissement,
+      req.body.code_cedex2_etablissement,
+      req.body.libelle_cedex2_etablissement,
+      req.body.code_pays_etranger2_etablissement,
+      req.body.libelle_pays_etranger2_etablissement,
+      req.body.date_debut,
+      req.body.etat_administratif_etablissement,
+      req.body.enseigne1_etablissement,
+      req.body.enseigne2_etablissement,
+      req.body.enseigne3_etablissement,
+      req.body.denomination_usuelle_etablissement,
+      req.body.activite_principale_etablissement,
+      req.body.nomenclature_activite_principale_etablissement,
+      req.body.caractere_employeur_etablissement
+    ];
+
+    const query = `
+      INSERT INTO etablissements (
+        siren, nic, siret, statut_diffusion_etablissement, date_creation_etablissement,
+        tranche_effectifs_etablissement, annee_effectifs_etablissement,
+        activite_principale_registre_metiers_etablissement, date_dernier_traitement_etablissement,
+        etablissement_siege, nombre_periodes_etablissement, complement_adresse_etablissement,
+        numero_voie_etablissement, indice_repetition_etablissement, type_voie_etablissement,
+        libelle_voie_etablissement, code_postal_etablissement, libelle_commune_etablissement,
+        libelle_commune_etranger_etablissement, distribution_speciale_etablissement,
+        code_commune_etablissement, code_cedex_etablissement, libelle_cedex_etablissement,
+        code_pays_etranger_etablissement, libelle_pays_etranger_etablissement,
+        complement_adresse2_etablissement, numero_voie2_etablissement,
+        indice_repetition2_etablissement, type_voie2_etablissement, libelle_voie2_etablissement,
+        code_postal2_etablissement, libelle_commune2_etablissement,
+        libelle_commune_etranger2_etablissement, distribution_speciale2_etablissement,
+        code_commune2_etablissement, code_cedex2_etablissement, libelle_cedex2_etablissement,
+        code_pays_etranger2_etablissement, libelle_pays_etranger2_etablissement, date_debut,
+        etat_administratif_etablissement, enseigne1_etablissement, enseigne2_etablissement,
+        enseigne3_etablissement, denomination_usuelle_etablissement, activite_principale_etablissement,
+        nomenclature_activite_principale_etablissement, caractere_employeur_etablissement
+      )
+      VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
+        $21, $22, $23, $24, $25, $26, $27, $28, $29, $30,
+        $31, $32, $33, $34, $35, $36, $37, $38, $39, $40,
+        $41, $42, $43, $44, $45, $46, $47, $48
+      );
+    `;
+
+    await pool.query(query, values);
+    res.status(201).send('Enregistrement ajouté avec succès');
   } catch (error) {
-    console.error('Erreur lors de l\'ajout des données:', error);
+    console.error('Erreur lors de l\'ajout des données :', error);
     res.status(500).send('Erreur lors de l\'ajout des données');
   }
 });
