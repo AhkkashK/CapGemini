@@ -127,9 +127,6 @@ app.put('/etablissements/:siret', async (req, res) => {
 });
 
 
-
-
-
 /* DELETE */
 app.delete('/etablissements/:siret', async (req, res) => {
   const { siret } = req.params;
