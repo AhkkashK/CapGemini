@@ -1,4 +1,8 @@
 
+uri = "mongodb+srv://hilaryjoycekamteupone:vKDuKjSF9crxVIXL@cluster0.rfs00.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+
+
+
 const express = require('express');
 
 const app = express();
@@ -16,6 +20,10 @@ app.get('/', (req, res) => {
 
 
 /*CREATE*/
+app.post('/', (req, res) => {
+  // Code to handle the creation of a new resource
+  res.send('Resource created successfully');
+});
 
 
 /*UPDATE*/
@@ -27,3 +35,6 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
 });
+
+
+
