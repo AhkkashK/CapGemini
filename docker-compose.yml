@@ -13,12 +13,27 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./data.csv:/docker-entrypoint-initdb.d/data.csv
-      - ./01-init.sql:/docker-entrypoint-initdb.d/01-init.sql   
-      - ./02-init.sh:/docker-entrypoint-initdb.d/02-init.sh   
-                                  
-                                      
+      - ./01-init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./02-init.sh:/docker-entrypoint-initdb.d/02-init.sh
     networks:
       - app_network
+
+  node-app:
+    build: .
+    container_name: node_server
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "3000:3000"  # Map the port for the Node.js app
+    volumes:
+      - .:/usr/src/app  # Mount the project files into the container
+    depends_on:
+      - db  # Ensure that the db service is started before the Node.js app
+    networks:
+      - app_network
+    command: ["node", "server.js"]  # This will start your server when the container runs
 
 volumes:
   db_data:
