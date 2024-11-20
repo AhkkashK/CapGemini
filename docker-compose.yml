@@ -5,16 +5,18 @@ services:
     image: postgres:latest
     container_name: postgres_db
     environment:
-      POSTGRES_USER: admin      # juste pour le moment
-      POSTGRES_PASSWORD: password 
-      POSTGRES_DB: capgem     
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"                 
+      - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./data.csv:/docker-entrypoint-initdb.d/data.csv
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      
+      - ./01-init.sql:/docker-entrypoint-initdb.d/01-init.sql   
+      - ./02-init.sh:/docker-entrypoint-initdb.d/02-init.sh   
+                                  
+                                      
     networks:
       - app_network
 

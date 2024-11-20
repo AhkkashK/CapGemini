@@ -49,31 +49,9 @@ CREATE TABLE IF NOT EXISTS etablissements (
     caractere_employeur_etablissement CHAR(1)
 );
 
+-- Création de l'index sur la colonne siret
+CREATE INDEX IF NOT EXISTS idx_siret ON etablissements(siret);
 
 
--- Vérifier si des données existent déjà (par exemple si la table est vide)
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM etablissements LIMIT 1) THEN
-        COPY etablissements(siren, nic, siret, statut_diffusion_etablissement, date_creation_etablissement, 
-                            tranche_effectifs_etablissement, annee_effectifs_etablissement, 
-                            activite_principale_registre_metiers_etablissement, date_dernier_traitement_etablissement, 
-                            etablissement_siege, nombre_periodes_etablissement, complement_adresse_etablissement, 
-                            numero_voie_etablissement, indice_repetition_etablissement, type_voie_etablissement, 
-                            libelle_voie_etablissement, code_postal_etablissement, libelle_commune_etablissement, 
-                            libelle_commune_etranger_etablissement, distribution_speciale_etablissement, 
-                            code_commune_etablissement, code_cedex_etablissement, libelle_cedex_etablissement, 
-                            code_pays_etranger_etablissement, libelle_pays_etranger_etablissement, 
-                            complement_adresse2_etablissement, numero_voie2_etablissement, 
-                            indice_repetition2_etablissement, type_voie2_etablissement, libelle_voie2_etablissement, 
-                            code_postal2_etablissement, libelle_commune2_etablissement, 
-                            libelle_commune_etranger2_etablissement, distribution_speciale2_etablissement, 
-                            code_commune2_etablissement, code_cedex2_etablissement, libelle_cedex2_etablissement, 
-                            code_pays_etranger2_etablissement, libelle_pays_etranger2_etablissement, date_debut, 
-                            etat_administratif_etablissement, enseigne1_etablissement, enseigne2_etablissement, 
-                            enseigne3_etablissement, denomination_usuelle_etablissement, activite_principale_etablissement, 
-                            nomenclature_activite_principale_etablissement, caractere_employeur_etablissement)
-        FROM '/docker-entrypoint-initdb.d/data.csv' WITH CSV HEADER DELIMITER ';';
-    END IF;
-END $$;
+
 

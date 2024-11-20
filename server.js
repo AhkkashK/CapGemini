@@ -1,16 +1,17 @@
 const express = require('express');
 const { Pool } = require('pg');
 const fs = require('fs');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configurer la connexion PostgreSQL
 const pool = new Pool({
-  user: 'admin',
+  user: process.env.POSTGRES_USER,
   host: 'localhost',
-  database: 'capgem',
-  password: 'password',
+  database: process.env.POSTGRES_DB,
+  password: process.env.POSTGRES_PASSWORD,
   port: 5432,
 });
 
