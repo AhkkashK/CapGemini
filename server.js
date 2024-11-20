@@ -187,8 +187,8 @@ app.post('/etablissements', async (req, res) => {
 
 /* UPDATE */
 app.put('/etablissements/:siret', async (req, res) => {
-  const { siret } = req.params;
-  const updatedFields = req.body;
+  const { siret } = req.params; // Le numéro de SIRET de l'établissement à mettre à jour
+  const updatedFields = req.body; // Champs à mettre à jour (tous les champs fournis dans le body)
 
   if (updatedFields.siret) {
     return res.status(400).send('Le champ "siret" ne peut pas être modifié');
