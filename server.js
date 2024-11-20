@@ -27,9 +27,9 @@ app.get('/', (req, res) => {
 });
 
 /* READ */
-app.get('/siret', async (req, res) => {
+app.get('/etablissements', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM votre_table');
+    const result = await pool.query('SELECT * FROM etablissements');
     res.json(result.rows);
   } catch (error) {
     console.error('Erreur lors de la lecture des données:', error);
@@ -37,8 +37,28 @@ app.get('/siret', async (req, res) => {
   }
 });
 
+/*READ2*/
+
+app.get('/etablissements/:siret', async (req, res) => {
+  const { siret } = req.params; // Récupérer le SIRET depuis les paramètres de l'URL
+
+  try {
+    const result = await pool.query('SELECT * FROM etablissements WHERE siret = $1', [siret]);
+    
+    if (result.rows.length === 0) {
+      return res.status(404).send('Établissement non trouvé');
+    }
+
+    res.json(result.rows[0]); // Renvoyer uniquement le premier résultat trouvé
+  } catch (error) {
+    console.error('Erreur lors de la lecture des données:', error);
+    res.status(500).send('Erreur lors de la lecture des données');
+  }
+});
+
+
 /* CREATE */
-app.post('/siret', async (req, res) => {
+app.post('etablissements/', async (req, res) => {
   const { siret, nom } = req.body;
   try {
     await pool.query('INSERT INTO votre_table (siret, nom) VALUES ($1, $2)', [siret, nom]);
@@ -50,26 +70,71 @@ app.post('/siret', async (req, res) => {
 });
 
 /* UPDATE */
-app.put('/siret/:siret', async (req, res) => {
-  const { siret } = req.params;
-  const { nom } = req.body;
+app.put('/etablissements/:siret', async (req, res) => {
+  const { siret } = req.params; // Le numéro de SIRET de l'établissement à mettre à jour
+  const updatedFields = req.body; // Champs à mettre à jour (tous les champs fournis dans le body)
+
+  // Vérifier que le champ 'siret' n'est pas inclus dans le body
+  if (updatedFields.siret) {
+    return res.status(400).send('Le champ "siret" ne peut pas être modifié');
+  }
+
+  // Vérifier que le corps de la requête n'est pas vide
+  if (Object.keys(updatedFields).length === 0) {
+    return res.status(400).send('Aucun champ à mettre à jour');
+  }
+
   try {
-    const result = await pool.query('UPDATE votre_table SET nom = $1 WHERE siret = $2 RETURNING *', [nom, siret]);
-    if (result.rowCount === 0) {
-      return res.status(404).send('Enregistrement non trouvé');
+    // Vérifier si le SIRET existe déjà dans la base de données
+    const checkSiretResult = await pool.query('SELECT * FROM etablissements WHERE siret = $1', [siret]);
+
+    if (checkSiretResult.rows.length === 0) {
+      return res.status(404).send('Établissement non trouvé');
     }
-    res.send('Enregistrement mis à jour');
+
+    // Construire la requête SQL de mise à jour de manière dynamique
+    let updateQuery = 'UPDATE etablissements SET ';
+    let updateValues = [];
+    let counter = 1;
+
+    // Parcourir les champs envoyés dans le corps de la requête et ajouter les champs à la requête SQL
+    for (let field in updatedFields) {
+      if (updatedFields.hasOwnProperty(field)) {
+        updateQuery += `${field} = $${counter}, `;
+        updateValues.push(updatedFields[field]);
+        counter++;
+      }
+    }
+
+    // Retirer la dernière virgule de la requête SQL
+    updateQuery = updateQuery.slice(0, -2);
+    updateQuery += ` WHERE siret = $${counter}`;
+    updateValues.push(siret);
+
+    // Exécuter la requête de mise à jour
+    const updateResult = await pool.query(updateQuery, updateValues);
+
+    // Vérifier si la mise à jour a eu un effet
+    if (updateResult.rowCount === 0) {
+      return res.status(404).send('Établissement non trouvé');
+    }
+
+    res.send('Établissement mis à jour avec succès');
   } catch (error) {
-    console.error('Erreur lors de la mise à jour:', error);
-    res.status(500).send('Erreur lors de la mise à jour');
+    console.error('Erreur lors de la mise à jour de l\'établissement:', error);
+    res.status(500).send('Erreur serveur');
   }
 });
 
+
+
+
+
 /* DELETE */
-app.delete('/siret/:siret', async (req, res) => {
+app.delete('/etablissements/:siret', async (req, res) => {
   const { siret } = req.params;
   try {
-    const result = await pool.query('DELETE FROM votre_table WHERE siret = $1 RETURNING *', [siret]);
+    const result = await pool.query('DELETE FROM etablissements WHERE siret = $1 RETURNING *', [siret]);
     if (result.rowCount === 0) {
       return res.status(404).send('Enregistrement non trouvé');
     }
