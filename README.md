@@ -10,9 +10,6 @@ de cette façon
 
 ```
 
-Vérifiez bien que vous avez toutes les librairies en faisant la commande : 
-```npm install 
-```
 Ensuite lancez la commande suivante : 
 ```
 docker-compose up
