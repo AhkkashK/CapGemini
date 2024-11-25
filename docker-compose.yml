@@ -22,7 +22,7 @@ services:
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}", "-h", "localhost"]
       interval: 300s  # Vérification toutes les 10 secondes
-      retries: 5     # Essayer 5 fois avant de considérer que la base de données est prête
+      retries: 1O     # Essayer 5 fois avant de considérer que la base de données est prête
       timeout: 300s    # Temps d'attente pour chaque test de connexion
 
   node-app:
