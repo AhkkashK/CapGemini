@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Lancer le serveur avec la commande `node server.js`
-CMD ["node", "server.js"]
+CMD ["node", "--max-old-space-size=8192", "server.js"]
