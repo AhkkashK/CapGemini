@@ -19,6 +19,6 @@ done
 echo "La table 'etablissements' existe, démarrage de l'importation..."
 
 # Importation des données depuis le fichier CSV dans la table
-psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\COPY etablissements FROM '/docker-entrypoint-initdb.d/data.csv' WITH CSV HEADER DELIMITER ';';"
+psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\COPY etablissements FROM '/docker-entrypoint-initdb.d/data.csv' WITH CSV HEADER DELIMITER ',';"
 
 echo "Importation terminée !"
