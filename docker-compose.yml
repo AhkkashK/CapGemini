@@ -21,9 +21,9 @@ services:
     # Ajouter un healthcheck pour vérifier si PostgreSQL est prêt
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}", "-h", "localhost"]
-      interval: 10s  # Vérification toutes les 10 secondes
+      interval: 300s  # Vérification toutes les 10 secondes
       retries: 5     # Essayer 5 fois avant de considérer que la base de données est prête
-      timeout: 5s    # Temps d'attente pour chaque test de connexion
+      timeout: 300s    # Temps d'attente pour chaque test de connexion
 
   node-app:
     build: .
