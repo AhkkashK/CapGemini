@@ -13,19 +13,21 @@ Resource Orientation: each resource is identified by a unique URI, allowing prec
 ## Installation
 
 Clone the project
-```git clone https://github.com/AhkkashK/CapGemini.git
+```
+git clone https://github.com/AhkkashK/CapGemini.git
 ```
 Create a .env file in the root of the project to configure variables
 ```touch .env
 ```
 In the .env file set your variables like the following
 ```
-    POSTGRES_USER=XXXXX
-    POSTGRES_PASSWORD=XXXX
-    POSTGRES_DB=XXXX
+POSTGRES_USER=XXXXX
+POSTGRES_PASSWORD=XXXX
+POSTGRES_DB=XXXX
 ```
 Run the following command (Make sure to have Docker running)
-```docker-compose up
+```
+docker-compose up
 ```
 ## Informations about files
 
