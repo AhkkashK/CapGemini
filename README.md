@@ -47,8 +47,6 @@ Create the schema of the database.
 ### init.sh
 Script ensuring the synchronization between each container and the importation of the data into postgresql.
 
-### data.csv
-CSV file containing data about establishments.
 
 ## API
 
