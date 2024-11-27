@@ -56,7 +56,7 @@ CSV file containing data about establishments.
 
 Return the data about this siret number
 
-### POST /etablissements/:siret
+### POST /etablissements/
 
 Create a establishments with a new siret number
 
