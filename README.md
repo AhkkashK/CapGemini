@@ -17,7 +17,8 @@ Clone the project
 git clone https://github.com/AhkkashK/CapGemini.git
 ```
 Create a .env file in the root of the project to configure variables
-```touch .env
+```
+touch .env
 ```
 In the .env file set your variables like the following
 ```
