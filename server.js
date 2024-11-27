@@ -54,17 +54,7 @@ app.get('/', (req, res) => {
   res.send('Etablissement API');
 });
 
-/* READ */
-app.get('/etablissements', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM etablissements');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Erreur lors de la lecture des données:', error);
-    logToFile(`Erreur lors de la lecture des données: ${error.message}`);
-    res.status(500).send('Erreur lors de la lecture des données');
-  }
-});
+
 
 /*READ2*/
 app.get('/etablissements/:siret', async (req, res) => {
